@@ -11,7 +11,7 @@
 
 **一款强大的Kotlin多平台“markdown”中文开发包，适用于 Compose Multiplatform 的 Kotlin 多平台项目。**
 
-[![GitHub](https://jitpack.io/v/dxycw/zwkfb.svg)](https://jitpack.io/#dxycw/multiplatform-zwkfb)
+[![GitHub](https://jitpack.io/v/dxycw/markdown.svg)](https://jitpack.io/#dxycw/markdown)
 [![Kotlin](https://img.shields.io/badge/kotlin-v2.4.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-v1.12.0--beta02-blue)](https://github.com/JetBrains/compose-multiplatform)
 
