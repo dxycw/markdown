@@ -1,0 +1,71 @@
+package com.iffly.compose.markdown.multiplatform.widget
+
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.unit.dp
+
+/**
+ * A composable that displays a loading indicator with a shimmer animation background.
+ *
+ * Renders a [CircularProgressIndicator] centered inside a rounded box with an
+ * animated linear gradient shimmer effect.
+ */
+@Composable
+fun LoadingView(modifier: Modifier = Modifier) {
+    val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
+    val shimmerColors =
+        remember(surfaceVariant) {
+            listOf(
+                surfaceVariant.copy(alpha = 0.6f),
+                surfaceVariant.copy(alpha = 0.3f),
+                surfaceVariant.copy(alpha = 0.6f),
+            )
+        }
+    val shape = remember { RoundedCornerShape(8.dp) }
+    val transition = rememberInfiniteTransition(label = "shimmer")
+    val shimmerX by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1000f,
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(durationMillis = 2000, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart,
+            ),
+        label = "shimmerAnim",
+    )
+
+    Box(
+        modifier =
+            modifier
+                .clip(shape)
+                .background(
+                    Brush.linearGradient(
+                        colors = shimmerColors,
+                        start = androidx.compose.ui.geometry.Offset.Zero,
+                        end =
+                            androidx.compose.ui.geometry
+                                .Offset(shimmerX, shimmerX),
+                    ),
+                ),
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator(modifier = Modifier.size(32.dp))
+    }
+}
