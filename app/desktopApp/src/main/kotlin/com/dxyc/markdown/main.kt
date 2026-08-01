@@ -8,9 +8,8 @@ import com.mikepenz.markdown.sample.aboutlibraries
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
-        title = "Markdownmultiplatform",
+        title = "Markdown",
     ) {
-//        App(aboutlibraries())
-        com.iffly.compose.markdown.sample.App()
+        App(aboutlibraries())
     }
 }

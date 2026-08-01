@@ -1,6 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-
 pluginManagement {
     repositories {
         google {
@@ -33,10 +32,10 @@ plugins {
 }
 
 rootProject.name = "Markdownmultiplatform"
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app:androidApp")
 include(":app:desktopApp")
 include(":app:shared")
 include(":app:webApp")
+
 include(":markdown")
