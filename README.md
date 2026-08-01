@@ -1,54 +1,61 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop (JVM), Server.
+> [!CAUTION]
+>
+> **注意：本库是本作者个人私库（不公开分享本库，不建议他人使用），如果想使用本库可以在项目中使用依赖库或克隆分支（可以自己新建一个分支修改本库，不可提交到本库），请不要上传提交，请勿私自外传本项目。**
 
-* [/app/iosApp](./app/iosApp/iosApp) contains an iOS application. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
 
-* [/app/shared](./app/shared/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./app/shared/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./app/shared/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./app/shared/src/jvmMain/kotlin)
-    folder is the appropriate location.
+<div align="center">
 
-* [/core](./core/src) is for the code that will be shared between all targets in the project.
-  The most important subfolder is [commonMain](./core/src/commonMain/kotlin). If preferred, you
-  can add code to the platform-specific folders here too.
+<h1>
+  Compose Multiplatform Markdown
+</h1>
 
-* [/server](./server/src/main/kotlin) is for the Ktor server application.
+**一款强大的Kotlin多平台“markdown”中文开发包，适用于 Compose Multiplatform 的 Kotlin 多平台项目。**
 
-### Running the apps
+[![GitHub](https://jitpack.io/v/dxycw/zwkfb.svg)](https://jitpack.io/#dxycw/multiplatform-zwkfb)
+[![Kotlin](https://img.shields.io/badge/kotlin-v2.4.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-v1.12.0--beta02-blue)](https://github.com/JetBrains/compose-multiplatform)
 
-Use the run configurations provided by the run widget in your IDE's toolbar. You can also use these commands and options:
+![badge-android](http://img.shields.io/badge/platform-android-6EDB8D.svg?style=flat)
+![badge-ios](http://img.shields.io/badge/platform-ios-CDCDCD.svg?style=flat)
+![badge-desktop](http://img.shields.io/badge/platform-desktop-DB413D.svg?style=flat)
+![badge-web](https://img.shields.io/badge/platform-web-59B6EC.svg?style=flat)
 
-- Android app: `./gradlew :app:androidApp:assembleDebug`
-- Desktop app:
-  - Hot reload: `./gradlew :app:desktopApp:hotRun --auto`
-  - Standard run: `./gradlew :app:desktopApp:run`
-- Server: `./gradlew :server:run`
-- Web app:
-  - Wasm target (faster, modern browsers): `./gradlew :app:webApp:wasmJsBrowserDevelopmentRun`
-  - JS target (slower, supports older browsers): `./gradlew :app:webApp:jsBrowserDevelopmentRun`
-- iOS app: open the [/app/iosApp](./app/iosApp) directory in Xcode and run it from there.
+</div>
 
-### Running tests
+# 使用方法
 
-Use the run button in your IDE's editor gutter, or run tests using Gradle tasks:
+**1、在项目中添加依赖项的方法：**
 
-- Android tests: `./gradlew :app:shared:testAndroidHostTest`
-- Desktop tests: `./gradlew :app:shared:jvmTest`
-- Server tests: `./gradlew :server:test`
-- Web tests:
-  - Wasm target: `./gradlew :app:shared:wasmJsTest`
-  - JS target: `./gradlew :app:shared:jsTest`
-- iOS tests: `./gradlew :app:shared:iosSimulatorArm64Test`
+```kotlin
 
----
+// 在项目的 settings.gradle.kts 文件中添加 JitPack 仓库
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }  // 添加 JitPack 仓库
+    }
+}
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com.cn/en-us/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
+// 在项目的 build.gradle.kts 文件中添加依赖项
+kotlin {
+    sourceSets {
+        // 多平台，
+        commonMain.dependencies {
+            // 如果使用多平台 Jetpack Compose Multiplatform 项目，请添加以下依赖项
+            implementation("com.github.dxycw.markdown:markdown:1.0.0")
+        }
+    }
+}
 
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [YouTrack](https://youtrack.jetbrains.com/newIssue?project=CMP).
+```
+
+
+# 更新内容
+
+## 1.0.0
+
+* 优化 项目文档，完善使用方法、平台支持、依赖库等信息；
+* 创建 Markdown项目，把 "io.github.feiyin0719:markdown-multiplatform:0.3.0" 和 "com.mikepenz:multiplatform-markdown-renderer:0.43.0"导入到本项目中；
+* 删除 “server” 和 “core” 两个模块；
+* 删除 “logback”、“ktor-serverCore”、“ktor-serverNetty”、“ktor-serverTestHost”和“kotlin-testJunit” 依赖库；
