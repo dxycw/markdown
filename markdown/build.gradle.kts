@@ -9,9 +9,6 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     id("maven-publish")
-
-    id("com.vanniktech.maven.publish") version "0.37.0"
-
 }
 
 kotlin {
@@ -156,39 +153,4 @@ kotlin {
 
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
-}
-
-
-mavenPublishing {
-    publishToMavenCentral()
-
-    signAllPublications()
-
-    coordinates("com.dxyc", "markdown", "1.0.0")
-
-    pom {
-        name = "markdown"
-        description = "用于Kotlin多平台项目（Android、iOS、Desktop (Windows, MacOS 和 Linux)和 Web 的Markdown包，使用Jetpack Compose Multiplatform开发。 注意：本库是本作者个人私库（不公开分享本库，不建议他人使用），如果想使用本库可以在项目中使用依赖库或克隆分支（可以自己新建一个分支修改本库，不可提交到本库），请不要上传提交，请勿私自外传本项目。"
-        inceptionYear = "2026"
-        url = "https://github.com/dxycw/markdown/"
-        licenses {
-            license {
-                name = "Apache License"
-                url = "https://opensource.org/license/apache-2-0"
-            }
-        }
-        developers {
-            developer {
-                id = "dxycw"
-                name = "dxyc"
-                url = "https://github.com/dxycw/"
-                email = "3293666408@qq.com"
-            }
-        }
-        scm {
-            url = "https://github.com/dxycw/markdown/"
-            connection = "scm:git:git://github.com/dxycw/markdown.git"
-            developerConnection = "scm:git:ssh://git@github.com/dxycw/markdown.git"
-        }
-    }
 }
