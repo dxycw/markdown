@@ -2,4 +2,7 @@ jdk:
   - openjdk21
 
 install:
-  - ./gradlew publishToMavenLocal -x jsMainClasses -x wasmJsMainClasses -x kotlinNpmInstall -x compileKotlinJs -x compileKotlinWasmJs -x markdown:publishToMavenLocal -x test --no-configuration-cache
+  ./gradlew :markdown:publishToMavenLocal :zwkfb:publishToMavenLocal \
+  -x jsMainClasses -x wasmJsMainClasses \
+  -x kotlinNpmInstall -x compileKotlinJs -x compileKotlinWasmJs \
+  -x test --no-configuration-cache
