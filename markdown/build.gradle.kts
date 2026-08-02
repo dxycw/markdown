@@ -154,3 +154,49 @@ kotlin {
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
 }
+
+// 添加 JitPack Maven 发布配置
+afterEvaluate {
+    publishing {
+        repositories {
+            maven {
+                url = uri("https://jitpack.io")
+            }
+        }
+
+        // 确保所有目标架构都被发布
+        publications {
+            withType<MavenPublication> {
+                // 如果你使用 GitHub，JitPack 需要这个 groupId
+                groupId = "com.github.dxycw"
+                artifactId = "markdown"  // 根据你的仓库名修改
+
+                pom {
+                    name.set("markdown")
+                    description.set("Markdown renderer for Compose Multiplatform")
+                    url.set("https://github.com/dxycw/markdown")
+
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id.set("dxycw")
+                            name.set("dxycw")
+                        }
+                    }
+
+                    scm {
+                        connection.set("scm:git:https://github.com/dxycw/markdown.git")
+                        developerConnection.set("scm:git:https://github.com/dxycw/markdown.git")
+                        url.set("https://github.com/dxycw/markdown")
+                    }
+                }
+            }
+        }
+    }
+}

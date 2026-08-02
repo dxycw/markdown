@@ -33,10 +33,13 @@ plugins {
 
 rootProject.name = "Markdownmultiplatform"
 
+
 include(":app:androidApp")
-include(":app:desktopApp")
 include(":app:shared")
+include(":app:desktopApp")
 include(":app:webApp")
+include(":app:iosApp")
+
 
 include(":markdown")
 
