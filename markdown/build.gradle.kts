@@ -8,7 +8,9 @@ plugins {
 
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    id("maven-publish")
+//    id("maven-publish")
+
+    id("com.vanniktech.maven.publish") version "0.37.0"
 }
 
 kotlin {
@@ -153,4 +155,43 @@ kotlin {
 
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
+}
+
+mavenPublishing {
+    // 发布到 Maven Central，并自动发布（可选）
+    publishToMavenCentral()
+    // 签名所有发布产物
+    signAllPublications()
+
+    // 定义项目坐标
+    coordinates("io.github.dxycw", "markdown", "1.0.0")
+
+    // 配置 POM 文件信息
+    pom {
+        name.set("markdown")
+        description.set("Compose Markdown Multiplatform")
+        inceptionYear.set("2026")
+        url.set("https://github.com/dxycw/markdown/")
+
+        licenses {
+            license {
+                name.set("The Apache License, Version 2.0")
+                url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+            }
+        }
+
+        developers {
+            developer {
+                id.set("dxycw")
+                name.set("dxycw")
+                url.set("https://github.com/dxycw/")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/dxycw/markdown/")
+            connection.set("scm:git:git://github.com/dxycw/markdown.git")
+            developerConnection.set("scm:git:ssh://git@github.com/dxycw/markdown.git")
+        }
+    }
 }
