@@ -1,38 +1,50 @@
 name: Publish to Maven Central
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [published]  # 在 GitHub 发布 Release 时触发
+  workflow_dispatch:     # 或手动触发
 
 jobs:
   publish:
-    runs-on: macos-latest
+    runs-on: macos-latest  # macOS 才能编译 iOS target
+    timeout-minutes: 30
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'zulu'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Import GPG Key
+        run: |
+          echo "${{ secrets.SIGNING_KEY }}" | base64 -d > secring.gpg
+        shell: bash
+
+      - name: Publish to Maven Central
+        run: ./gradlew publishAllPublicationsToMavenCentralRepository --no-configuration-cache
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}  # 如果用 in-memory 方式
 
       - name: Publish
+        run: ./gradlew publishAllPublicationsToMavenCentralRepository
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
-        run: |
-          # 清理所有环境变量中的空白字符
-          export ORG_GRADLE_PROJECT_signingInMemoryKeyId=$(echo "$ORG_GRADLE_PROJECT_signingInMemoryKeyId" | tr -d '[:space:]')
-          export ORG_GRADLE_PROJECT_signingInMemoryKey=$(echo "$ORG_GRADLE_PROJECT_signingInMemoryKey" | tr -d '[:space:]')
-          export ORG_GRADLE_PROJECT_signingInMemoryKeyPassword=$(echo "$ORG_GRADLE_PROJECT_signingInMemoryKeyPassword" | tr -d '[:space:]')
-          
-          # 调试：打印长度（不打印内容）
-          echo "Key ID length: ${#ORG_GRADLE_PROJECT_signingInMemoryKeyId}"
-          echo "Key length: ${#ORG_GRADLE_PROJECT_signingInMemoryKey}"
-          
-          ./gradlew publishAllPublicationsToMavenCentralRepository
