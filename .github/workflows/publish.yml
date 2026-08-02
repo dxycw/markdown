@@ -31,14 +31,14 @@ jobs:
           echo "${{ secrets.SIGNING_KEY }}" | base64 -d > secring.gpg
         shell: bash
 
-      - name: Publish to Maven Central
-        run: ./gradlew publishAllPublicationsToMavenCentralRepository --no-configuration-cache
-        env:
-          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}  # 如果用 in-memory 方式
+#      - name: Publish to Maven Central
+#        run: ./gradlew publishAllPublicationsToMavenCentralRepository --no-configuration-cache
+#        env:
+#          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+#          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+#          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+#          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+#          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}  # 如果用 in-memory 方式
 
       - name: Publish
         run: ./gradlew publishAllPublicationsToMavenCentralRepository
@@ -48,3 +48,8 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
+
+      - name: Publish to Maven Central
+        run: |
+          chmod +x gradlew
+          ./gradlew publishAllPublicationsToMavenCentralRepository --no-configuration-cache
