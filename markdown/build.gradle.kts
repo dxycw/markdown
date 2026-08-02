@@ -169,7 +169,8 @@ afterEvaluate {
             withType<MavenPublication> {
                 // 如果你使用 GitHub，JitPack 需要这个 groupId
                 groupId = "com.github.dxycw"
-                artifactId = "markdown"  // 根据你的仓库名修改
+                // 不要固定 artifactId，保持每个模块原有的 artifactId
+                // artifactId = "markdown"  // 移除此行
 
                 pom {
                     name.set("markdown")
