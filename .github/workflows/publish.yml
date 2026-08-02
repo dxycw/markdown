@@ -2,13 +2,13 @@ name: Publish to Maven Central
 
 on:
   release:
-    types: [published]  # 在 GitHub 发布 Release 时触发
-  workflow_dispatch:     # 或手动触发
+    types: [published]
+  workflow_dispatch:
 
 jobs:
   publish:
-    runs-on: macos-latest  # macOS 才能编译 iOS target
-    timeout-minutes: 30
+    runs-on: macos-latest
+    timeout-minutes: 60  # Compose 多平台发布较慢，建议 60 分钟
 
     steps:
       - name: Checkout
@@ -26,30 +26,13 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Import GPG Key
+      - name: Publish to Maven Central
         run: |
-          echo "${{ secrets.SIGNING_KEY }}" | base64 -d > secring.gpg
-        shell: bash
-
-#      - name: Publish to Maven Central
-#        run: ./gradlew publishAllPublicationsToMavenCentralRepository --no-configuration-cache
-#        env:
-#          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-#          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-#          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-#          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-#          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}  # 如果用 in-memory 方式
-
-      - name: Publish
-        run: ./gradlew publishAllPublicationsToMavenCentralRepository
+          chmod +x gradlew
+          ./gradlew publishAllPublicationsToMavenCentralRepository --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
-
-      - name: Publish to Maven Central
-        run: |
-          chmod +x gradlew
-          ./gradlew publishAllPublicationsToMavenCentralRepository --no-configuration-cache
