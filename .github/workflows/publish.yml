@@ -10,7 +10,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-java@v4
         with:
           java-version: '21'
@@ -19,18 +18,21 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Prepare signing secrets
-        run: |
-          # 清理所有可能的空格、换行、制表符
-          echo "KEY_ID=$(echo '${{ secrets.SIGNING_KEY_ID }}' | tr -d '[:space:]')" >> $GITHUB_ENV
-          echo "KEY=$(echo '${{ secrets.SIGNING_KEY }}' | tr -d '[:space:]')" >> $GITHUB_ENV
-          echo "PASS=$(echo '${{ secrets.SIGNING_PASSWORD }}' | tr -d '[:space:]')" >> $GITHUB_ENV
-
       - name: Publish
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ env.KEY_ID }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ env.KEY }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ env.PASS }}
-        run: ./gradlew publishAllPublicationsToMavenCentralRepository
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
+        run: |
+          # 清理所有环境变量中的空白字符
+          export ORG_GRADLE_PROJECT_signingInMemoryKeyId=$(echo "$ORG_GRADLE_PROJECT_signingInMemoryKeyId" | tr -d '[:space:]')
+          export ORG_GRADLE_PROJECT_signingInMemoryKey=$(echo "$ORG_GRADLE_PROJECT_signingInMemoryKey" | tr -d '[:space:]')
+          export ORG_GRADLE_PROJECT_signingInMemoryKeyPassword=$(echo "$ORG_GRADLE_PROJECT_signingInMemoryKeyPassword" | tr -d '[:space:]')
+          
+          # 调试：打印长度（不打印内容）
+          echo "Key ID length: ${#ORG_GRADLE_PROJECT_signingInMemoryKeyId}"
+          echo "Key length: ${#ORG_GRADLE_PROJECT_signingInMemoryKey}"
+          
+          ./gradlew publishAllPublicationsToMavenCentralRepository
