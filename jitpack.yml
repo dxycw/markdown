@@ -1,5 +1,8 @@
 jdk:
   - openjdk21
 
+env:
+  machine: macos-14
+
 install:
   - ./gradlew publishToMavenLocal -x jsMainClasses -x wasmJsMainClasses -x kotlinNpmInstall -x compileKotlinJs -x compileKotlinWasmJs

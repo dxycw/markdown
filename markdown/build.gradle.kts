@@ -38,15 +38,15 @@ kotlin {
         }
     }
 
-//    listOf(
-        iosArm64()
+    listOf(
+        iosArm64(),
         iosSimulatorArm64()
-//    ).forEach { iosTarget ->
-//        iosTarget.binaries.framework {
-//            baseName = "markdownKit"
-////            isStatic = true
-//        }
-//    }
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "markdownKit"
+//            isStatic = true
+        }
+    }
 
     jvm("desktop") {
         compilerOptions {
