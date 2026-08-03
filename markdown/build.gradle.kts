@@ -11,6 +11,7 @@ plugins {
 //    id("maven-publish")
 
     id("com.vanniktech.maven.publish") version "0.37.0"
+    id("signing")
 }
 
 kotlin {
@@ -193,5 +194,17 @@ mavenPublishing {
             connection.set("scm:git:git://github.com/dxycw/markdown.git")
             developerConnection.set("scm:git:ssh://git@github.com/dxycw/markdown.git")
         }
+    }
+}
+
+signing {
+    val signingKey = System.getenv("ORG_GRADLE_PROJECT_signingInMemoryKey")
+        ?.replace("\\n", "\n")  // 处理可能的转义换行
+    val signingPassword = System.getenv("ORG_GRADLE_PROJECT_signingInMemoryKeyPassword")
+
+    if (!signingKey.isNullOrBlank()) {
+        // 不传 keyId，让 Gradle 自动从密钥中提取
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign(publishing.publications)
     }
 }
