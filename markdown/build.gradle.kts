@@ -198,13 +198,13 @@ mavenPublishing {
 }
 
 signing {
-    val signingKey = System.getenv("ORG_GRADLE_PROJECT_signingInMemoryKey")
-        ?.replace("\\n", "\n")  // 处理可能的转义换行
-    val signingPassword = System.getenv("ORG_GRADLE_PROJECT_signingInMemoryKeyPassword")
+    val signingKeyFile = System.getenv("ORG_GRADLE_PROJECT_signingKey")
+    val signingPassword = System.getenv("ORG_GRADLE_PROJECT_signingPassword")
 
-    if (!signingKey.isNullOrBlank()) {
-        // 不传 keyId，让 Gradle 自动从密钥中提取
-        useInMemoryPgpKeys(signingKey, signingPassword)
+    if (signingKeyFile != null && File(signingKeyFile).exists()) {
+        useGpgCmd()
+        // 或者指定密钥环
+        // useInMemoryPgpKeys(File(signingKeyFile).readText(), signingPassword)
         sign(publishing.publications)
     }
 }
