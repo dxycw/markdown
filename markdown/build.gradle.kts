@@ -11,7 +11,7 @@ plugins {
 //    id("maven-publish")
 
     id("com.vanniktech.maven.publish") version "0.37.0"
-    id("signing")
+//    id("signing")
 }
 
 kotlin {
@@ -197,13 +197,7 @@ mavenPublishing {
     }
 }
 
-signing {
-    val signingKeyId = findProperty("signingKeyId") as String?
-    val signingKey = findProperty("signingKey") as String?
-    val signingPassword = findProperty("signingPassword") as String?
 
-    if (signingKeyId != null && signingKey != null && signingPassword != null) {
-        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-        sign(publishing.publications)
-    }
-}
+//tasks.withType<Sign>().configureEach {
+//    onlyIf { !project.hasProperty("skipSigning") }
+//}
