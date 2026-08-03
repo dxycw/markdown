@@ -198,12 +198,12 @@ mavenPublishing {
 }
 
 signing {
-    val publishTasks = listOf("publish", "publishToMavenLocal", "publishToSonatype")
-    val isPublishing = gradle.startParameter.taskNames.any { name ->
-        publishTasks.any { name.contains(it, ignoreCase = true) }
-    }
+    val signingKeyId = findProperty("signingKeyId") as String?
+    val signingKey = findProperty("signingKey") as String?
+    val signingPassword = findProperty("signingPassword") as String?
 
-    if (isPublishing) {
+    if (signingKeyId != null && signingKey != null && signingPassword != null) {
+        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
         sign(publishing.publications)
     }
 }
