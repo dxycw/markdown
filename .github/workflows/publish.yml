@@ -1,43 +1,24 @@
-name: Publish to Maven Central
-
+name: Publish
 on:
   release:
-    types: [published]
-  workflow_dispatch:
-
+    types: [released, prereleased]
 jobs:
   publish:
-    runs-on: macos-latest
-    timeout-minutes: 60  # Compose 多平台发布较慢，建议 60 分钟
-
+    name: Release build and publish
+    runs-on: macOS-latest
     steps:
-      - name: Checkout
+      - name: Check out code
         uses: actions/checkout@v4
-
-      - name: Setup JDK
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
           distribution: 'zulu'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Write signing key to file
-        run: |
-          cat <<'EOF' > /tmp/secring.gpg
-          ${{ secrets.SIGNING_KEY }}
-          EOF
-        shell: bash
-
-      - name: Build & Publish
+          java-version: 21
+      - name: Publish to MavenCentral
+        run: ./gradlew publishToMavenCentral --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
-          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.SIGNING_KEY_ID }}
-        run: ./gradlew publish
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
