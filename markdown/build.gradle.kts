@@ -198,13 +198,12 @@ mavenPublishing {
 }
 
 signing {
-    // 从环境变量读取（vanniktech 插件会自动处理，但手动配置需要这样写）
-    val signingKey = System.getenv("ORG_GRADLE_PROJECT_signingInMemoryKey")
-        ?.replace("\\n", "\n")  // 处理 GitHub Secret 可能的转义
-    val signingPassword = System.getenv("ORG_GRADLE_PROJECT_signingInMemoryKeyPassword")
+    val publishTasks = listOf("publish", "publishToMavenLocal", "publishToSonatype")
+    val isPublishing = gradle.startParameter.taskNames.any { name ->
+        publishTasks.any { name.contains(it, ignoreCase = true) }
+    }
 
-    if (!signingKey.isNullOrBlank()) {
-        useInMemoryPgpKeys(signingKey, signingPassword)
+    if (isPublishing) {
         sign(publishing.publications)
     }
 }
