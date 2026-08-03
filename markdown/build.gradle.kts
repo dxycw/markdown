@@ -196,8 +196,3 @@ mavenPublishing {
         }
     }
 }
-
-
-//tasks.withType<Sign>().configureEach {
-//    onlyIf { !project.hasProperty("skipSigning") }
-//}
