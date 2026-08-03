@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Base64
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -11,7 +12,7 @@ plugins {
 //    id("maven-publish")
 
     id("com.vanniktech.maven.publish") version "0.37.0"
-//    id("signing")
+    id("signing")
 }
 
 kotlin {
@@ -194,5 +195,17 @@ mavenPublishing {
             connection.set("scm:git:git://github.com/dxycw/markdown.git")
             developerConnection.set("scm:git:ssh://git@github.com/dxycw/markdown.git")
         }
+    }
+}
+
+signing {
+    val keyId = System.getenv("SIGNING_KEY_ID")          // 45932E0A
+    val keyBase64 = System.getenv("SIGNING_KEY_BASE64")  // base64 编码的私钥
+    val password = System.getenv("SIGNING_PASSWORD")
+
+    if (!keyId.isNullOrBlank() && !keyBase64.isNullOrBlank() && !password.isNullOrBlank()) {
+        val key = String(Base64.getDecoder().decode(keyBase64))
+        useInMemoryPgpKeys(keyId, key, password)
+        sign(publishing.publications["android"])
     }
 }
