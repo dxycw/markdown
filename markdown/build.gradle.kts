@@ -198,13 +198,13 @@ mavenPublishing {
 }
 
 signing {
-    val signingKeyFile = System.getenv("ORG_GRADLE_PROJECT_signingKey")
-    val signingPassword = System.getenv("ORG_GRADLE_PROJECT_signingPassword")
+    // 从环境变量读取（vanniktech 插件会自动处理，但手动配置需要这样写）
+    val signingKey = System.getenv("ORG_GRADLE_PROJECT_signingInMemoryKey")
+        ?.replace("\\n", "\n")  // 处理 GitHub Secret 可能的转义
+    val signingPassword = System.getenv("ORG_GRADLE_PROJECT_signingInMemoryKeyPassword")
 
-    if (signingKeyFile != null && File(signingKeyFile).exists()) {
-        useGpgCmd()
-        // 或者指定密钥环
-        // useInMemoryPgpKeys(File(signingKeyFile).readText(), signingPassword)
+    if (!signingKey.isNullOrBlank()) {
+        useInMemoryPgpKeys(signingKey, signingPassword)
         sign(publishing.publications)
     }
 }
