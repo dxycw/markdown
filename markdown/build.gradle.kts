@@ -10,10 +10,10 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     id("maven-publish")
+    id("com.vanniktech.maven.publish")  version  "0.37.0"
 }
 
 kotlin {
-
     android {
         namespace = "com.markdown"
         compileSdk {
@@ -154,4 +154,44 @@ kotlin {
 
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
+}
+
+
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+
+    coordinates(
+        groupId = "io.github.dxycw",
+        artifactId = "markdown",
+        version = "1.0.0"
+    )
+
+    pom {
+        name = "markdown"
+        description = "Markdown Compose Multiplatform."
+        inceptionYear = "2026"
+        url = "https://github.com/dxycw/markdown"
+
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+        }
+
+        developers {
+            developer {
+                id = "dxycw"
+                name = "dxycw"
+                email = "3293666408@qq.com"
+            }
+        }
+
+        scm {
+            url = "https://github.com/dxycw/markdown"
+            connection = "scm:git:git://github.com/dxycw/markdown.git"
+            developerConnection = "scm:git:ssh://git@github.com:dxycw/markdown.git"
+        }
+    }
 }
