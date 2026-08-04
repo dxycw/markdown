@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish:
-    runs-on: macos-latest  # macOS 必须，用于编译 iOS 目标
+    runs-on: macos-latest # macOS 必须，用于编译 iOS 目标
 
     steps:
       - uses: actions/checkout@v4
@@ -17,11 +17,14 @@ jobs:
           java-version: '21'
           distribution: 'zulu'
 
-      - name: Publish
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Publish to Maven Central
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
-        run: ./gradlew publishAllPublicationsToMavenCentralRepository
+        run: ./gradlew publishAllPublicationsToMavenCentralRepository --no-daemon
